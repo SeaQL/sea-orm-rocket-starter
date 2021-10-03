@@ -2,8 +2,7 @@
 extern crate rocket;
 
 use rocket::fairing::{self, AdHoc};
-use rocket::form::{Context, Form};
-use rocket::fs::{relative, FileServer};
+use rocket::fs::{relative};
 use rocket::response::{Redirect};
 use rocket::{Build, Request, Rocket};
 use rocket_db_pools::{sqlx, Connection, Database};
@@ -19,7 +18,7 @@ pub mod bakery_chain;
 mod setup;
 
 #[derive(Database, Debug)]
-#[database("rocket_example")]
+#[database("rocket_starter")]
 struct Db(RocketDbPool);
 
 type Result<T, E = rocket::response::Debug<sqlx::Error>> = std::result::Result<T, E>;
@@ -46,7 +45,6 @@ fn rocket() -> _ {
     rocket::build()
         .attach(Db::init())
         .attach(AdHoc::try_on_ignite("Migrations", run_migrations))
-        .mount("/", FileServer::from(relative!("/static")))
         .mount(
             "/",
             routes![],

@@ -1,18 +1,30 @@
-use sea_orm::sea_query::{ColumnDef, TableCreateStatement};
-use sea_orm::{error::*, sea_query, DbConn, ExecResult};
+use sea_orm::{error::*, DbConn, ExecResult, EntityTrait, Schema};
+use super::bakery_chain::*;
 
-mod schema;
+async fn create_table<E>(
+    db: &DbConn,
+    entity: E,
+) -> Result<ExecResult, DbErr>
+where
+    E: EntityTrait,
+{
+    let builder = db.get_database_backend();
+    let stmt = builder.build(&Schema::create_table_from_entity(entity));
+    db.execute(stmt).await
+}
+
 
 pub async fn create_tables(db: &DbConn) -> Result<(), DbErr> {
-    schema::create_bakery_table(&db).await.unwrap();
-    schema::create_baker_table(&db).await.unwrap();
-    schema::create_customer_table(&db).await.unwrap();
-    schema::create_order_table(&db).await.unwrap();
-    schema::create_cake_table(&db).await.unwrap();
-    schema::create_cakes_bakers_table(&db).await.unwrap();
-    schema::create_lineitem_table(&db).await.unwrap();
-    schema::create_metadata_table(&db).await.unwrap();
-    schema::create_log_table(&db).await.unwrap();
+    let _ = create_table(db, Bakery).await;
+    let _ = create_table(db, Baker).await;
+    let _ = create_table(db, Customer).await;
+    let _ = create_table(db, Order).await;
+    let _ = create_table(db, Lineitem).await;
+    let _ = create_table(db, CakesBakers).await;
+    let _ = create_table(db, Cake).await;
+    let _ = create_table(db, Metadata).await;
+    let _ = create_table(db, Applog).await;
 
     Ok(())
 }
+
