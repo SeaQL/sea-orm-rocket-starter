@@ -2,20 +2,17 @@
 extern crate rocket;
 
 use rocket::fairing::{self, AdHoc};
-use rocket::fs::{relative};
-use rocket::response::{Redirect};
+use rocket::fs::relative;
+use rocket::response::Redirect;
+use rocket::serde::json::{json, Json, Value};
+use rocket::serde::{Deserialize, Serialize};
 use rocket::{Build, Request, Rocket};
 use rocket_db_pools::{sqlx, Connection, Database};
-use rocket::serde::json::{Json, Value, json};
-use rocket::serde::{Serialize, Deserialize};
 
-use sea_orm::{entity::*, query::*};
+pub use lil_lib::*;
 
 mod pool;
 use pool::RocketDbPool;
-pub mod bakery_chain;
-
-mod setup;
 
 #[derive(Database, Debug)]
 #[database("rocket_starter")]
@@ -28,7 +25,7 @@ type Result<T, E = rocket::response::Debug<sqlx::Error>> = std::result::Result<T
 
 async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
     let conn = &Db::fetch(&rocket).unwrap().conn;
-    let _ = setup::create_tables(conn).await;
+    let _ = lil_lib::setup::create_tables(conn).await;
     Ok(rocket)
 }
 
@@ -45,9 +42,6 @@ fn rocket() -> _ {
     rocket::build()
         .attach(Db::init())
         .attach(AdHoc::try_on_ignite("Migrations", run_migrations))
-        .mount(
-            "/",
-            routes![],
-        )
+        .mount("/", routes![])
         .register("/", catchers![not_found])
 }
