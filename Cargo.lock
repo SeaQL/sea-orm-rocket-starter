@@ -1346,6 +1346,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "rust_decimal_macros"
+version = "1.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5732c6adfbb4bbf262b7625832174ef76ccec1786bf8badfcfd11c494214f1a9"
+dependencies = [
+ "quote",
+ "rust_decimal",
+]
+
+[[package]]
 name = "rustls"
 version = "0.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1433,12 +1443,16 @@ version = "0.1.0"
 dependencies = [
  "async-stream",
  "async-trait",
+ "chrono",
  "futures",
  "futures-util",
  "rocket",
  "rocket_db_pools",
+ "rust_decimal",
+ "rust_decimal_macros",
  "sea-orm",
  "serde_json",
+ "uuid",
 ]
 
 [[package]]

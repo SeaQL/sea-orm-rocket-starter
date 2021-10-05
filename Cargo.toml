@@ -2,20 +2,39 @@
 name = "sea-orm-rocket-starter"
 version = "0.1.0"
 edition = "2018"
+default-run = "main"
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
+
+# [[bin]]
+# name = "seed"
+# path = "src/bin/seed.rs"
+
+[lib]
+name = "lil_lib"
+path = "src/lib.rs"
 
 [dependencies]
 async-stream = { version = "^0.3" }
 async-trait = { version = "0.1" }
+chrono = { version = "^0" }
+
 futures = { version = "^0.3" }
 futures-util = { version = "^0.3" }
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", features = [
   "json",
 ] }
 rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket.git" }
+rust_decimal = { version = "^1" }
+rust_decimal_macros = { version = "^1" }
+
 sea-orm = { version = "^0.2.4", features = [
   "macros",
 ], default-features = false }
 serde_json = { version = "^1" }
+uuid = { version = "0.8", features = ["serde", "v4"] }
 
 [features]
 default = ["sqlx-postgres"]
