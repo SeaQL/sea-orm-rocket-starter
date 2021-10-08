@@ -1,7 +1,6 @@
 use sea_orm::entity::prelude::*;
 use crate::lil_lib::cakes as cakes;
 use crate::lil_lib::bakeries as bakeries;
-use crate::lil_lib::bakers as bakers;
 use crate::lil_lib::cakes_bakers as cakes_bakers;
 use crate::lil_lib::lineitems as lineitems;
 use crate::lil_lib::customers as customers;
