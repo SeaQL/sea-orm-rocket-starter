@@ -12,9 +12,9 @@ path = "src/main.rs"
 # name = "seed"
 # path = "src/bin/seed.rs"
 
-[lib]
-name = "lil_lib"
-path = "src/lib.rs"
+# [lib]
+# name = "lil_lib"
+# path = "src/lil_lib/mod.rs"
 
 [dependencies]
 async-stream = { version = "^0.3" }

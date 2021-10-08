@@ -1,5 +1,4 @@
-#[macro_use]
-extern crate rocket;
+#[macro_use] extern crate rocket;
 
 use rocket::fairing::{self, AdHoc};
 use rocket::fs::relative;
@@ -9,14 +8,8 @@ use rocket::serde::{Deserialize, Serialize};
 use rocket::{Build, Request, Rocket};
 use rocket_db_pools::{sqlx, Connection, Database};
 
-pub use lil_lib::*;
-
-mod pool;
-use pool::RocketDbPool;
-
-#[derive(Database, Debug)]
-#[database("rocket_starter")]
-struct Db(RocketDbPool);
+// use lil_lib::pool::*;
+mod lil_lib;
 
 type Result<T, E = rocket::response::Debug<sqlx::Error>> = std::result::Result<T, E>;
 
@@ -24,7 +17,7 @@ type Result<T, E = rocket::response::Debug<sqlx::Error>> = std::result::Result<T
 // pub use post::Entity as Post;
 
 async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
-    let conn = &Db::fetch(&rocket).unwrap().conn;
+    let conn = &lil_lib::pool::Db::fetch(&rocket).unwrap().conn;
     let _ = lil_lib::setup::create_tables(conn).await;
     Ok(rocket)
 }
@@ -40,8 +33,15 @@ fn not_found() -> Value {
 #[launch]
 fn rocket() -> _ {
     rocket::build()
-        .attach(Db::init())
+        .attach(lil_lib::pool::Db::init())
         .attach(AdHoc::try_on_ignite("Migrations", run_migrations))
-        .mount("/", routes![])
+        .mount("/cakes",
+            routes![lil_lib::cakes::handler::all,
+                // lil_lib::cakes::handler::get,
+                // lil_lib::cakes::handler::post,
+                // lil_lib::cakes::handler::put,
+                // lil_lib::cakes::handler::delete
+                ],
+        )
         .register("/", catchers![not_found])
 }
