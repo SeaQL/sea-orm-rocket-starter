@@ -1,12 +1,9 @@
 #[macro_use] extern crate rocket;
 
 use rocket::fairing::{self, AdHoc};
-use rocket::fs::relative;
-use rocket::response::Redirect;
-use rocket::serde::json::{json, Json, Value};
-use rocket::serde::{Deserialize, Serialize};
-use rocket::{Build, Request, Rocket};
-use rocket_db_pools::{sqlx, Connection, Database};
+use rocket::serde::json::{json, Value};
+use rocket::{Build, Rocket};
+use rocket_db_pools::{Database};
 
 mod lil_lib;
 mod db;

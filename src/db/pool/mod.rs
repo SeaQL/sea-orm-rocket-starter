@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use rocket_db_pools::{rocket::figment::Figment, Config};
-use rocket_db_pools::{sqlx, Connection, Database};
+use rocket_db_pools::{Database};
 
 #[derive(Debug)]
 pub struct RocketDbPool {
