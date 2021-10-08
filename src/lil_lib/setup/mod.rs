@@ -1,5 +1,5 @@
-use super::bakery_chain::*;
 use sea_orm::{DbConn, EntityTrait, Schema};
+use crate::lil_lib::*;
 
 async fn create_table<E>(db: &DbConn, entity: E)
 where
@@ -22,6 +22,4 @@ pub async fn create_tables(db: &DbConn) {
     create_table(db, Cake).await;
     create_table(db, CakesBakers).await;
     create_table(db, Lineitem).await;
-    create_table(db, Metadata).await;
-    create_table(db, Applog).await;
 }

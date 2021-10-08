@@ -1,4 +1,11 @@
 use sea_orm::entity::prelude::*;
+use crate::lil_lib::cakes as cakes;
+use crate::lil_lib::bakeries as bakeries;
+use crate::lil_lib::bakers as bakers;
+use crate::lil_lib::cakes_bakers as cakes_bakers;
+use crate::lil_lib::lineitems as lineitems;
+use crate::lil_lib::customers as customers;
+use crate::lil_lib::orders as orders;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = "cakes_bakers")]
@@ -12,17 +19,17 @@ pub struct Model {
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(
-        belongs_to = "super::cake::Entity",
+        belongs_to = "cakes::cake::Entity",
         from = "Column::CakeId",
-        to = "super::cake::Column::Id",
+        to = "cakes::cake::Column::Id",
         on_update = "Cascade",
         on_delete = "Cascade"
     )]
     Cake,
     #[sea_orm(
-        belongs_to = "super::baker::Entity",
+        belongs_to = "bakers::baker::Entity",
         from = "Column::BakerId",
-        to = "super::baker::Column::Id",
+        to = "bakers::baker::Column::Id",
         on_update = "Cascade",
         on_delete = "Cascade"
     )]
