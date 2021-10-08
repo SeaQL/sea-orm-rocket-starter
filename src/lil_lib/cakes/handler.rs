@@ -4,11 +4,10 @@ use rocket_db_pools::{sqlx, Connection, Database};
 use sea_orm::{entity::*, query::*};
 use crate::lil_lib::pool::Db;
 // use crate::lil_lib::bakery_chain::*;
-use crate::lil_lib::bakery_chain;
-use crate::lil_lib::bakery_chain::cake::Entity as Cake;
+use super::cake::Entity as Cake;
 
 #[get("/")]
-pub async fn all(connection: Connection<Db>) -> Result<Json<Vec<bakery_chain::cake::Model>>, Status> {
+pub async fn all(connection: Connection<Db>) -> Result<Json<Vec<super::cake::Model>>, Status> {
       Ok(Json(Cake::find()
         .all(&connection)
         .await
