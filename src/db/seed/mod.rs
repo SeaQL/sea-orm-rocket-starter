@@ -9,8 +9,14 @@ use rust_decimal_macros::dec;
 use sea_orm::entity::prelude::*;
 use sea_orm::entity::*;
 use uuid::Uuid;
+use crate::lil_lib::*;
 
-// extern crate lil_lib;
+use crate::lil_lib::bakeries as bakeries;
+use crate::lil_lib::bakers as bakers;
+use crate::lil_lib::cakes_bakers as cakes_bakers;
+use crate::lil_lib::lineitems as lineitems;
+use crate::lil_lib::customers as customers;
+use crate::lil_lib::orders as orders;
 
 fn main() {
     let url = Figment::from(Toml::file("Rocket.toml"))
@@ -26,7 +32,7 @@ fn main() {
 
 async fn seed_database(url: &str) {
     let db = sea_orm::Database::connect(url).await.unwrap();
-    lil_lib::setup::create_tables(&db).await;
+    super::migrations::create_tables(&db).await;
     // Bakery
     println!("Seeding Bakery...");
 
