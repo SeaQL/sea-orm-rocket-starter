@@ -1,7 +1,10 @@
 use sea_orm::entity::prelude::*;
+use rocket::serde::{Serialize, Deserialize};
+use crate::lil_lib::bakery_chain;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = "cake")]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
+#[serde(crate = "rocket::serde")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
@@ -16,34 +19,34 @@ pub struct Model {
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(
-        belongs_to = "super::bakery::Entity",
+        belongs_to = "bakery_chain::bakery::Entity",
         from = "Column::BakeryId",
-        to = "super::bakery::Column::Id",
+        to = "bakery_chain::bakery::Column::Id",
         on_update = "Cascade",
         on_delete = "Cascade"
     )]
     Bakery,
-    #[sea_orm(has_many = "super::lineitem::Entity")]
+    #[sea_orm(has_many = "bakery_chain::lineitem::Entity")]
     Lineitem,
 }
 
-impl Related<super::bakery::Entity> for Entity {
+impl Related<bakery_chain::bakery::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Bakery.def()
     }
 }
 
-impl Related<super::baker::Entity> for Entity {
+impl Related<bakery_chain::baker::Entity> for Entity {
     fn to() -> RelationDef {
-        super::cakes_bakers::Relation::Baker.def()
+        bakery_chain::cakes_bakers::Relation::Baker.def()
     }
 
     fn via() -> Option<RelationDef> {
-        Some(super::cakes_bakers::Relation::Cake.def().rev())
+        Some(bakery_chain::cakes_bakers::Relation::Cake.def().rev())
     }
 }
 
-impl Related<super::lineitem::Entity> for Entity {
+impl Related<bakery_chain::lineitem::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Lineitem.def()
     }

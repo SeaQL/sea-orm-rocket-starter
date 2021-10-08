@@ -1,5 +1,5 @@
 use chrono::offset::Utc;
-use lil_lib::bakery_chain::*;
+// use crate::lil_lib::bakery_chain::*;
 use rocket::tokio::runtime;
 use rocket_db_pools::rocket::figment::{
     providers::{Format, Toml},
@@ -9,6 +9,8 @@ use rust_decimal_macros::dec;
 use sea_orm::entity::prelude::*;
 use sea_orm::entity::*;
 use uuid::Uuid;
+
+// extern crate lil_lib;
 
 fn main() {
     let url = Figment::from(Toml::file("Rocket.toml"))
