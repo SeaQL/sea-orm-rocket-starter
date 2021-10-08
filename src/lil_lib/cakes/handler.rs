@@ -2,7 +2,7 @@ use rocket::http::Status;
 use rocket::serde::json::{json, Json, Value};
 use rocket_db_pools::{sqlx, Connection, Database};
 use sea_orm::{entity::*, query::*};
-use crate::lil_lib::pool::Db;
+use crate::db::pool::Db;
 // use crate::lil_lib::bakery_chain::*;
 use super::cake::Entity as Cake;
 
