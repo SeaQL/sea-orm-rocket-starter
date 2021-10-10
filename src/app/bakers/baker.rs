@@ -1,10 +1,10 @@
 use sea_orm::entity::prelude::*;
-use crate::lil_lib::cakes as cakes;
-use crate::lil_lib::bakeries as bakeries;
-use crate::lil_lib::cakes_bakers as cakes_bakers;
-use crate::lil_lib::lineitems as lineitems;
-use crate::lil_lib::customers as customers;
-use crate::lil_lib::orders as orders;
+use crate::app::cakes as cakes;
+use crate::app::bakeries as bakeries;
+use crate::app::cakes_bakers as cakes_bakers;
+use crate::app::lineitems as lineitems;
+use crate::app::customers as customers;
+use crate::app::orders as orders;
 
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]

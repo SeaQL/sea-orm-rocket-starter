@@ -1,5 +1,5 @@
 use sea_orm::{DbConn, EntityTrait, Schema};
-use crate::lil_lib::*;
+use crate::app::*;
 
 async fn create_table<E>(db: &DbConn, entity: E)
 where

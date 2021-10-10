@@ -17,3 +17,6 @@ pub use cakes_bakers::Entity as CakesBakers;
 pub use customers::customer::Entity as Customer;
 pub use lineitems::lineitem::Entity as Lineitem;
 pub use orders::order::Entity as Order;
+
+pub mod db;
+pub use db::{pool, migrations};
