@@ -1,9 +1,11 @@
 use sea_orm::entity::prelude::*;
+use rocket::serde::{Serialize, Deserialize};
 use crate::app::cakes as cakes;
 use crate::app::bakers as bakers;
 use crate::app::orders as orders;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
+#[serde(crate = "rocket::serde")]
 #[sea_orm(table_name = "bakery")]
 pub struct Model {
     #[sea_orm(primary_key)]
