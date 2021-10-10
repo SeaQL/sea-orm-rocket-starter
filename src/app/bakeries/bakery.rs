@@ -1,7 +1,7 @@
 use sea_orm::entity::prelude::*;
-use crate::lil_lib::cakes as cakes;
-use crate::lil_lib::bakers as bakers;
-use crate::lil_lib::orders as orders;
+use crate::app::cakes as cakes;
+use crate::app::bakers as bakers;
+use crate::app::orders as orders;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = "bakery")]

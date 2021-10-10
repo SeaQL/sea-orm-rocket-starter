@@ -1,6 +1,6 @@
 use sea_orm::entity::prelude::*;
-use crate::lil_lib::cakes as cakes;
-use crate::lil_lib::bakers as bakers;
+use crate::app::cakes as cakes;
+use crate::app::bakers as bakers;
 
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]

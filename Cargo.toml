@@ -8,13 +8,9 @@ default-run = "main"
 name = "main"
 path = "src/main.rs"
 
-# [[bin]]
-# name = "seed"
-# path = "src/bin/seed.rs"
-
-# [lib]
-# name = "lil_lib"
-# path = "src/lil_lib/mod.rs"
+[[bin]]
+name = "seed"
+path = "src/bin/seed.rs"
 
 [dependencies]
 async-stream = { version = "^0.3" }

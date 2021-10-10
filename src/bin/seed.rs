@@ -1,5 +1,6 @@
+#[macro_use] extern crate rocket;
+
 use chrono::offset::Utc;
-// use crate::lil_lib::bakery_chain::*;
 use rocket::tokio::runtime;
 use rocket_db_pools::rocket::figment::{
     providers::{Format, Toml},
@@ -9,14 +10,19 @@ use rust_decimal_macros::dec;
 use sea_orm::entity::prelude::*;
 use sea_orm::entity::*;
 use uuid::Uuid;
-use crate::lil_lib::*;
 
-use crate::lil_lib::bakeries as bakeries;
-use crate::lil_lib::bakers as bakers;
-use crate::lil_lib::cakes_bakers as cakes_bakers;
-use crate::lil_lib::lineitems as lineitems;
-use crate::lil_lib::customers as customers;
-use crate::lil_lib::orders as orders;
+#[path = "../app/mod.rs"]
+mod app;
+use app::{*};
+use app::db::{migrations};
+
+use crate::app::bakeries::bakery as bakery;
+use crate::app::bakers::baker as baker;
+use crate::app::cakes_bakers as cakes_bakers;
+use crate::app::lineitems::lineitem as lineitem;
+use crate::app::customers::customer as customer;
+use crate::app::orders::order as order;
+use crate::app::cakes::cake as cake;
 
 fn main() {
     let url = Figment::from(Toml::file("Rocket.toml"))
@@ -32,7 +38,7 @@ fn main() {
 
 async fn seed_database(url: &str) {
     let db = sea_orm::Database::connect(url).await.unwrap();
-    super::migrations::create_tables(&db).await;
+    migrations::create_tables(&db).await;
     // Bakery
     println!("Seeding Bakery...");
 
@@ -124,7 +130,7 @@ async fn seed_database(url: &str) {
         placed_at: Set(Utc::now().naive_utc()),
         ..Default::default()
     };
-    let order_insert_res = lil_lib::bakery_chain::Order::insert(order_1)
+    let order_insert_res = Order::insert(order_1)
         .exec(&db)
         .await
         .expect("could not insert order");

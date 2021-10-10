@@ -1,22 +1,18 @@
 use sea_orm::entity::prelude::*;
-use rocket::serde::{Serialize, Deserialize};
-use crate::lil_lib::bakeries as bakeries;
-use crate::lil_lib::bakers as bakers;
-use crate::lil_lib::cakes_bakers as cakes_bakers;
-use crate::lil_lib::lineitems as lineitems;
+use crate::app::bakeries as bakeries;
+use crate::app::lineitems as lineitems;
+use crate::app::customers as customers;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
-#[serde(crate = "rocket::serde")]
-#[sea_orm(table_name = "cake")]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
+#[sea_orm(table_name = "order")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
-    pub name: String,
     #[sea_orm(column_type = "Decimal(Some((19, 4)))")]
-    pub price: Decimal,
-    pub bakery_id: Option<i32>,
-    pub gluten_free: bool,
-    pub serial: Uuid,
+    pub total: Decimal,
+    pub bakery_id: i32,
+    pub customer_id: i32,
+    pub placed_at: DateTime,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
@@ -29,6 +25,14 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Bakery,
+    #[sea_orm(
+        belongs_to = "customers::customer::Entity",
+        from = "Column::CustomerId",
+        to = "customers::customer::Column::Id",
+        on_update = "Cascade",
+        on_delete = "Cascade"
+    )]
+    Customer,
     #[sea_orm(has_many = "lineitems::lineitem::Entity")]
     Lineitem,
 }
@@ -39,13 +43,9 @@ impl Related<bakeries::bakery::Entity> for Entity {
     }
 }
 
-impl Related<bakers::baker::Entity> for Entity {
+impl Related<customers::customer::Entity> for Entity {
     fn to() -> RelationDef {
-        cakes_bakers::Relation::Baker.def()
-    }
-
-    fn via() -> Option<RelationDef> {
-        Some(cakes_bakers::Relation::Cake.def().rev())
+        Relation::Customer.def()
     }
 }
 
