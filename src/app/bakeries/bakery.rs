@@ -1,8 +1,8 @@
 use sea_orm::entity::prelude::*;
 use rocket::serde::{Serialize, Deserialize};
-use crate::app::cakes as cakes;
-use crate::app::bakers as bakers;
-use crate::app::orders as orders;
+use crate::app::cakes::cake as cake;
+use crate::app::bakers::baker as baker;
+use crate::app::orders::order as order;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
@@ -16,27 +16,27 @@ pub struct Model {
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "bakers::baker::Entity")]
+    #[sea_orm(has_many = "baker::Entity")]
     Baker,
-    #[sea_orm(has_many = "orders::order::Entity")]
+    #[sea_orm(has_many = "order::Entity")]
     Order,
-    #[sea_orm(has_many = "cakes::cake::Entity")]
+    #[sea_orm(has_many = "cake::Entity")]
     Cake,
 }
 
-impl Related<bakers::baker::Entity> for Entity {
+impl Related<baker::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Baker.def()
     }
 }
 
-impl Related<orders::order::Entity> for Entity {
+impl Related<order::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Order.def()
     }
 }
 
-impl Related<cakes::cake::Entity> for Entity {
+impl Related<cake::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Cake.def()
     }
