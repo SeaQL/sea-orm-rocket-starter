@@ -2,9 +2,9 @@ use rocket::http::Status;
 use rocket::serde::json::{json, Json, Value};
 use rocket_db_pools::{Connection};
 use sea_orm::{entity::*, query::*};
-use super::bakery::Entity as Bakery;
 
-use super::pool;
+use super::bakery::Entity as Bakery;
+use crate::pool;
 
 #[get("/")]
 pub async fn all(connection: Connection<pool::Db>) -> Result<Json<Vec<super::bakery::Model>>, Status> {
