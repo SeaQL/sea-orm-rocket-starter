@@ -43,5 +43,13 @@ fn rocket() -> _ {
                 // app::cakes::handler::delete
                 ],
         )
+        .mount("/bakers",
+            routes![app::bakers::handler::all,
+                // app::cakes::handler::get,
+                // app::cakes::handler::post,
+                // app::cakes::handler::put,
+                // app::cakes::handler::delete
+                ],
+        )
         .register("/", catchers![not_found])
 }
