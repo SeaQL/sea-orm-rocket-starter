@@ -6,6 +6,10 @@ use sea_orm::{entity::*, query::*};
 use super::cake::Entity as Cake;
 use crate::pool;
 
+pub fn routes() -> Vec<rocket::Route>{
+  routes![all]
+}
+
 #[get("/")]
 pub async fn all(connection: Connection<pool::Db>) -> Result<Json<Vec<super::cake::Model>>, Status> {
       Ok(Json(Cake::find()
