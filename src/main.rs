@@ -5,8 +5,9 @@ use rocket::serde::json::{json, Value};
 use rocket::{Build, Rocket};
 use rocket_db_pools::{Database};
 
-mod app;
-use app::db::{pool, migrations};
+mod domain;
+mod db;
+use db::{pool, migrations};
 
 async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
     let conn = &pool::Db::fetch(&rocket).unwrap().conn;
@@ -27,11 +28,11 @@ fn rocket() -> _ {
     rocket::build()
         .attach(pool::Db::init())
         .attach(AdHoc::try_on_ignite("Migrations", run_migrations))
-        .mount("/cakes", app::cakes::handler::routes() )
-        .mount("/bakeries", app::bakeries::handler::routes() )
-        .mount("/bakers", app::bakers::handler::routes() )
-        .mount("/customers", app::customers::handler::routes() )
-        .mount("/lineitems", app::lineitems::handler::routes() )
-        .mount("/orders", app::orders::handler::routes() )
+        .mount("/cakes", domain::cakes::handler::routes() )
+        .mount("/bakeries", domain::bakeries::handler::routes() )
+        .mount("/bakers", domain::bakers::handler::routes() )
+        .mount("/customers", domain::customers::handler::routes() )
+        .mount("/lineitems", domain::lineitems::handler::routes() )
+        .mount("/orders", domain::orders::handler::routes() )
         .register("/", catchers![not_found])
 }

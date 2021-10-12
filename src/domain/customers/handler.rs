@@ -3,19 +3,19 @@ use rocket::serde::json::{json, Json, Value};
 use rocket_db_pools::{Connection};
 use sea_orm::{entity::*, query::*};
 
-use super::bakery::Entity as Bakery;
-use crate::pool;
+use super::customer::Entity as Customer;
+use crate::db::pool;
 
 pub fn routes() -> Vec<rocket::Route>{
   routes![all]
 }
 
 #[get("/")]
-pub async fn all(connection: Connection<pool::Db>) -> Result<Json<Vec<super::bakery::Model>>, Status> {
-      Ok(Json(Bakery::find()
+pub async fn all(connection: Connection<pool::Db>) -> Result<Json<Vec<super::customer::Model>>, Status> {
+      Ok(Json(Customer::find()
         .all(&connection)
         .await
-        .expect("could not retrieve bakeries")
+        .expect("could not retrieve customers")
         .into_iter()
         .collect::<Vec<_>>()))
         // .map_err(|error| error_status(error))

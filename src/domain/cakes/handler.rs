@@ -4,7 +4,7 @@ use rocket_db_pools::{Connection};
 use sea_orm::{entity::*, query::*};
 
 use super::cake::Entity as Cake;
-use crate::pool;
+use crate::db::pool;
 
 pub fn routes() -> Vec<rocket::Route>{
   routes![all]
