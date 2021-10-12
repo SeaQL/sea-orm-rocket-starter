@@ -27,53 +27,11 @@ fn rocket() -> _ {
     rocket::build()
         .attach(pool::Db::init())
         .attach(AdHoc::try_on_ignite("Migrations", run_migrations))
-        .mount("/cakes",
-            routes![app::cakes::handler::all,
-                // app::cakes::handler::get,
-                // app::cakes::handler::post,
-                // app::cakes::handler::put,
-                // app::cakes::handler::delete
-                ],
-        )
-        .mount("/bakeries",
-            routes![app::bakeries::handler::all,
-                // app::cakes::handler::get,
-                // app::cakes::handler::post,
-                // app::cakes::handler::put,
-                // app::cakes::handler::delete
-                ],
-        )
-        .mount("/bakers",
-            routes![app::bakers::handler::all,
-                // app::cakes::handler::get,
-                // app::cakes::handler::post,
-                // app::cakes::handler::put,
-                // app::cakes::handler::delete
-                ],
-        )
-        .mount("/customers",
-            routes![app::customers::handler::all,
-                // app::cakes::handler::get,
-                // app::cakes::handler::post,
-                // app::cakes::handler::put,
-                // app::cakes::handler::delete
-                ],
-        )
-        .mount("/lineitems",
-            routes![app::lineitems::handler::all,
-                // app::cakes::handler::get,
-                // app::cakes::handler::post,
-                // app::cakes::handler::put,
-                // app::cakes::handler::delete
-                ],
-        )
-        .mount("/orders",
-            routes![app::orders::handler::all,
-                // app::cakes::handler::get,
-                // app::cakes::handler::post,
-                // app::cakes::handler::put,
-                // app::cakes::handler::delete
-                ],
-        )
+        .mount("/cakes", app::cakes::handler::routes() )
+        .mount("/bakeries", app::bakeries::handler::routes() )
+        .mount("/bakers", app::bakers::handler::routes() )
+        .mount("/customers", app::customers::handler::routes() )
+        .mount("/lineitems", app::lineitems::handler::routes() )
+        .mount("/orders", app::orders::handler::routes() )
         .register("/", catchers![not_found])
 }

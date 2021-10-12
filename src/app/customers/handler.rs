@@ -6,6 +6,10 @@ use sea_orm::{entity::*, query::*};
 use super::customer::Entity as Customer;
 use crate::pool;
 
+pub fn routes() -> Vec<rocket::Route>{
+  routes![all]
+}
+
 #[get("/")]
 pub async fn all(connection: Connection<pool::Db>) -> Result<Json<Vec<super::customer::Model>>, Status> {
       Ok(Json(Customer::find()
