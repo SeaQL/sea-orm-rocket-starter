@@ -11,18 +11,21 @@ use sea_orm::entity::prelude::*;
 use sea_orm::entity::*;
 use uuid::Uuid;
 
-#[path = "../app/mod.rs"]
-mod app;
-use app::{*};
-use app::db::{migrations};
+#[path = "../domain/mod.rs"]
+mod domain;
+use domain::{*};
 
-use crate::app::bakeries::bakery as bakery;
-use crate::app::bakers::baker as baker;
-use crate::app::cakes_bakers as cakes_bakers;
-use crate::app::lineitems::lineitem as lineitem;
-use crate::app::customers::customer as customer;
-use crate::app::orders::order as order;
-use crate::app::cakes::cake as cake;
+#[path = "../db/mod.rs"]
+mod db;
+use db::{migrations};
+
+use crate::domain::bakeries::bakery as bakery;
+use crate::domain::bakers::baker as baker;
+use crate::domain::cakes_bakers as cakes_bakers;
+use crate::domain::lineitems::lineitem as lineitem;
+use crate::domain::customers::customer as customer;
+use crate::domain::orders::order as order;
+use crate::domain::cakes::cake as cake;
 
 fn main() {
     let url = Figment::from(Toml::file("Rocket.toml"))

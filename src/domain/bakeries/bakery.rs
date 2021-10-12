@@ -1,8 +1,8 @@
 use sea_orm::entity::prelude::*;
 use rocket::serde::{Serialize, Deserialize};
-use crate::app::cakes::cake as cake;
-use crate::app::bakers::baker as baker;
-use crate::app::orders::order as order;
+use crate::domain::cakes::cake as cake;
+use crate::domain::bakers::baker as baker;
+use crate::domain::orders::order as order;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
