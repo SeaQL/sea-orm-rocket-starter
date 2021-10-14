@@ -1,8 +1,12 @@
 [package]
-name = "sea-orm-rocket-starter"
+name = "sea_orm_rocket_starter"
 version = "0.1.0"
 edition = "2018"
 default-run = "main"
+
+[lib]
+name = "sea_orm_rocket_starter"
+path = "src/lib.rs"
 
 [[bin]]
 name = "main"
