@@ -1,13 +1,14 @@
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
 
 use rocket::fairing::{self, AdHoc};
 use rocket::serde::json::{json, Value};
 use rocket::{Build, Rocket};
-use rocket_db_pools::{Database};
+use rocket_db_pools::Database;
 
-mod domain;
 mod db;
-use db::{pool, migrations};
+mod domain;
+use db::{migrations, pool};
 
 async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
     let conn = &pool::Db::fetch(&rocket).unwrap().conn;
@@ -23,28 +24,15 @@ fn not_found() -> Value {
     })
 }
 
-#[launch]
-pub fn rocket() -> _ {
+pub fn rocket() -> Rocket<Build> {
     rocket::build()
         .attach(pool::Db::init())
         .attach(AdHoc::try_on_ignite("Migrations", run_migrations))
-        .mount("/cakes", domain::cakes::handler::routes() )
-        .mount("/bakeries", domain::bakeries::handlers::routes() )
-        .mount("/bakers", domain::bakers::handler::routes() )
-        .mount("/customers", domain::customers::handler::routes() )
-        .mount("/lineitems", domain::lineitems::handler::routes() )
-        .mount("/orders", domain::orders::handler::routes() )
+        .mount("/cakes", domain::cakes::handler::routes())
+        .mount("/bakeries", domain::bakeries::handlers::routes())
+        .mount("/bakers", domain::bakers::handler::routes())
+        .mount("/customers", domain::customers::handler::routes())
+        .mount("/lineitems", domain::lineitems::handler::routes())
+        .mount("/orders", domain::orders::handler::routes())
         .register("/", catchers![not_found])
 }
-
-// #[cfg(test)]
-// mod test {
-//     use super::rocket;
-//     use rocket::local::blocking::Client;
-//     use rocket::http::Status;
-
-//     #[test]
-//     fn hello_world() {
-//         let client = Client::tracked(rocket()).expect("valid rocket instance");
-//     }
-// }

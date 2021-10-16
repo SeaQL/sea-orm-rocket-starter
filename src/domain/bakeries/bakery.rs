@@ -9,6 +9,7 @@ use crate::domain::orders::order as order;
 #[sea_orm(table_name = "bakery")]
 pub struct Model {
     #[sea_orm(primary_key)]
+    #[serde(skip_deserializing)]
     pub id: i32,
     pub name: String,
     pub profit_margin: f64,

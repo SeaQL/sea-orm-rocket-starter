@@ -1,3 +1,6 @@
+[test.databases.rocket_starter]
+url = "postgres://root:root@localhost/rocket_starter_test"
+
 [default.databases.rocket_starter]
 # Mysql
 # make sure to enable "sqlx-mysql" feature in Cargo.toml, i.e default = ["sqlx-mysql"]
