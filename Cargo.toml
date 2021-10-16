@@ -36,7 +36,11 @@ sea-orm = { version = "^0.2.4", features = [
 serde_json = { version = "^1" }
 uuid = { version = "0.8", features = ["serde", "v4"] }
 
+[dev.dependencies]
+serde_json = "1.0.68"
+
 [features]
-default = ["sqlx-postgres"]
+default = ["sqlx-postgres", "sqlx-sqlite"]
 sqlx-mysql = ["sea-orm/sqlx-mysql", "rocket_db_pools/sqlx_mysql"]
 sqlx-postgres = ["sea-orm/sqlx-postgres", "rocket_db_pools/sqlx_postgres"]
+sqlx-sqlite = ["sea-orm/sqlx-sqlite", "rocket_db_pools/sqlx_sqlite"]
