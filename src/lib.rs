@@ -25,7 +25,14 @@ fn not_found() -> Value {
 }
 
 pub fn rocket() -> Rocket<Build> {
-    rocket::build()
+    use figment::{Figment, providers::{Format, Toml, Env}};
+
+    let figment = Figment::new()
+        .merge(rocket::Config::default())
+        .merge(Toml::file("Rocket.toml").nested())
+        .merge(Env::prefixed("ROCKET_APP_").split("+"));
+
+    rocket::custom(figment)
         .attach(pool::Db::init())
         .attach(AdHoc::try_on_ignite("Migrations", run_migrations))
         .mount("/cakes", domain::cakes::handler::routes())

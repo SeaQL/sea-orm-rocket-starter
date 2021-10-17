@@ -1,5 +1,5 @@
-[test.databases.rocket_starter]
-url = "postgres://root:root@localhost/rocket_starter_test"
+# [test.databases.rocket_starter]
+# url = "postgres://root:root@localhost"
 
 [default.databases.rocket_starter]
 # Mysql
