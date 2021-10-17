@@ -3,15 +3,21 @@ use common::*;
 
 // use rocket::http::{ContentType, Status};
 use rocket::http::{ContentType, Status};
-use rocket::local::blocking::{Client, LocalResponse};
+use rocket::local::asynchronous::{Client, LocalResponse};
 
-#[test]
-fn all() {
-    let client = test_client();
-    create_bakery(&client);
+#[rocket::async_test]
+async fn all() {
+    let client = test_client().await;
+    create_bakery(&client).await;
+    create_bakery(&client).await;
+    let response = client
+        .get("/bakeries")
+        .header(ContentType::JSON)
+        .dispatch().await;
+    println!("response: {:#?}", response);
 }
 
-fn create_bakery(client: &Client) -> LocalResponse {
+async fn create_bakery(client: &Client) -> LocalResponse<'_> {
     let response = client
         .post("/bakeries")
         .header(ContentType::JSON)
@@ -21,9 +27,11 @@ fn create_bakery(client: &Client) -> LocalResponse {
             "profit_margin": 10.4
         }"##
         )
-        .dispatch();
+        .dispatch().await;
 
     assert_eq!(response.status(), Status::Ok);
+
+    // TODO: tear down the test_client database
 
     response
 }
