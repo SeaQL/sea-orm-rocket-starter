@@ -55,7 +55,7 @@ impl TestContext{
         let url = format!("{}/postgres", test_context.base_url);
         let db = Database::connect(&url).await.unwrap();
 
-        let r = db.execute(Statement::from_string(
+        let _r = db.execute(Statement::from_string(
             DatabaseBackend::Postgres,
             format!("DROP DATABASE IF EXISTS \"{}\" WITH (FORCE);", test_context.db_name)
         ))

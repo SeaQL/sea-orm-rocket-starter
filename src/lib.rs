@@ -7,7 +7,7 @@ use rocket::{Build, Rocket};
 use rocket_db_pools::Database;
 
 mod db;
-mod domain;
+pub mod domain;
 use db::{migrations, pool};
 
 async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
