@@ -7,14 +7,15 @@ use rocket::local::asynchronous::{Client, LocalResponse};
 
 #[rocket::async_test]
 async fn all() {
-    let client = test_client().await;
-    create_bakery(&client).await;
-    create_bakery(&client).await;
-    let response = client
+    let test_context = TestContext::init().await;
+    create_bakery(&test_context.client).await;
+    create_bakery(&test_context.client).await;
+    let response = &test_context.client
         .get("/bakeries")
         .header(ContentType::JSON)
         .dispatch().await;
-    println!("response: {:#?}", response);
+
+    TestContext::tear_down(&test_context).await;
 }
 
 async fn create_bakery(client: &Client) -> LocalResponse<'_> {
@@ -30,8 +31,6 @@ async fn create_bakery(client: &Client) -> LocalResponse<'_> {
         .dispatch().await;
 
     assert_eq!(response.status(), Status::Ok);
-
-    // TODO: tear down the test_client database
 
     response
 }
