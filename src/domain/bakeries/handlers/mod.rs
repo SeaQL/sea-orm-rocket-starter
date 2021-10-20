@@ -8,7 +8,7 @@ use super::bakery;
 use crate::db::pool;
 
 pub fn routes() -> Vec<rocket::Route> {
-    routes![all, create, get]
+    routes![all, create, get, update]
 }
 
 #[get("/")]
@@ -54,11 +54,27 @@ async fn create(conn: Connection<pool::Db>, input_data: Json<super::bakery::Inpu
     .await
     .expect("could not insert bakery");
 
-    let new_bakery: bakery::Model = Bakery::find_by_id(res.last_insert_id)
+    Ok(Json(fetch_bakery(conn, res.last_insert_id).await))
+}
+
+#[put("/<id>", data = "<input_data>")]
+async fn update(conn: Connection<pool::Db>, id: i32, input_data: Json<super::bakery::InputData>) -> Result<Json<super::bakery::Model>, Status> {
+    let input_data = input_data.clone().into_inner();
+
+    let r = bakery::ActiveModel {
+        id: Set(id),
+        name: Set(input_data.name.to_owned()),
+        profit_margin: Set(input_data.profit_margin),
+        ..Default::default()
+    }.update(&conn).await;
+
+    Ok(Json(fetch_bakery(conn, id).await))
+}
+
+async fn fetch_bakery(conn: Connection<pool::Db>, id: i32) -> super::bakery::Model {
+    Bakery::find_by_id(id)
         .one(&conn)
         .await
         .expect("could not find bakery")
-        .unwrap();
-
-    Ok(Json(new_bakery))
+        .unwrap()
 }

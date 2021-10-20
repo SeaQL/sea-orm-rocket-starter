@@ -11,6 +11,7 @@ use sea_orm_rocket_starter::domain::bakeries::*;
 async fn main() {
     all().await;
     get().await;
+    update().await;
 }
 
 async fn all() {
@@ -51,6 +52,34 @@ async fn get() {
     TestContext::tear_down(&test_context).await;
 }
 
+async fn update() {
+    let test_context = TestContext::init("bakeries_update").await;
+
+    let r = create_bakery(&test_context.client).await;
+
+    let response = test_context.client
+        .put(format!("/bakeries/{}", r.id))
+        .header(ContentType::JSON)
+        .body(
+            r##"{
+            "name": "Updated Bakery",
+            "profit_margin": 20.1
+        }"##
+        )
+        .dispatch()
+        .await;
+
+    let r_bakery = response
+        .into_json::<bakery::Model>()
+        .await
+        .unwrap();
+
+    assert_eq!(r_bakery.name, "Updated Bakery");
+    assert_eq!(r_bakery.profit_margin, 20.1);
+
+    TestContext::tear_down(&test_context).await;
+}
+
 async fn create_bakery(client: &Client) -> bakery::Model {
     let response = client
         .post("/bakeries")
@@ -67,5 +96,4 @@ async fn create_bakery(client: &Client) -> bakery::Model {
     let r = response.into_json::<bakery::Model>().await.expect("bakery");
 
     r
-
 }
