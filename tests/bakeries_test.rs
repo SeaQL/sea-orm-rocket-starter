@@ -7,27 +7,27 @@ use rocket::local::asynchronous::{Client, LocalResponse};
 
 use sea_orm_rocket_starter::domain::bakeries::*;
 
-// #[rocket::async_test]
-// async fn all() {
+#[rocket::async_test]
+async fn all() {
 
-//     rocket::tokio::task::spawn(async move {
-//         let test_context = TestContext::init().await;
-//         // println!("@@ all() test_context: {:#?}", test_context.client);
+    rocket::tokio::task::spawn(async move {
+        let test_context = TestContext::init().await;
+        // println!("@@ all() test_context: {:#?}", test_context.client);
 
-//         create_bakery(&test_context.client).await;
-//         create_bakery(&test_context.client).await;
-//         let response = test_context.client
-//             .get("/bakeries")
-//             .header(ContentType::JSON)
-//             .dispatch().await.into_json::<Vec<bakery::Model>>().await;
+        create_bakery(&test_context.client).await;
+        create_bakery(&test_context.client).await;
+        let response = test_context.client
+            .get("/bakeries")
+            .header(ContentType::JSON)
+            .dispatch().await.into_json::<Vec<bakery::Model>>().await;
 
-//         let bakery_vec = response.expect("no bakeries returned!");
-//         assert_eq!(bakery_vec.len(), 2);
+        let bakery_vec = response.expect("no bakeries returned!");
+        assert_eq!(bakery_vec.len(), 2);
 
-//         TestContext::tear_down(&test_context).await;
-//     }).await.expect("Task panicked");
+        TestContext::tear_down(&test_context).await;
+    }).await.expect("Task panicked");
 
-// }
+}
 
 #[rocket::async_test]
 async fn get() {
@@ -45,13 +45,13 @@ async fn get() {
             .await;
             println!("response: {:#?}", response);
 
-        // let r_bakery = response
-        //     .into_json::<bakery::Model>()
-        //     .await
-        //     .unwrap();
-    println!("response: {:#?}", response);
+        let r_bakery = response
+            .into_json::<bakery::Model>()
+            .await
+            .unwrap();
+    println!("response: {:#?}", r_bakery);
 
-        // assert_eq!(r_bakery.name, "Test Bakery");
+        assert_eq!(r_bakery.name, "Test Bakery");
 
         TestContext::tear_down(&test_context).await;
     }).await.expect("Task panicked");

@@ -50,18 +50,10 @@ println!("handler bakery: {:#?}", bakery);
     Ok(Json(bakery ))
 }
 
-use serde::{Serialize, Deserialize};
 
-#[derive(Clone, Debug, PartialEq, serde::Serialize, Deserialize)]
-pub struct BakeryInput {
-    pub name: String,
-    pub profit_margin: f64,
-}
-
-
-#[post("/", data = "<new_bakery>")]
-async fn create(conn: Connection<pool::Db>, new_bakery: Json<BakeryInput>) -> Result<Json<super::bakery::Model>, Status> {
-    let mut new_bakery = new_bakery.clone().into_inner();
+#[post("/", data = "<input_data>")]
+async fn create(conn: Connection<pool::Db>, input_data: Json<super::bakery::InputData>) -> Result<Json<super::bakery::Model>, Status> {
+    let new_bakery = input_data.clone().into_inner();
 
     let bakery = bakery::ActiveModel {
         name: Set(new_bakery.name.to_owned()),
@@ -69,45 +61,16 @@ async fn create(conn: Connection<pool::Db>, new_bakery: Json<BakeryInput>) -> Re
         ..Default::default()
     };
 
-        let res = Bakery::insert(bakery)
-        .exec(&conn)
-        .await
-        .expect("could not insert bakery");
+    let res = Bakery::insert(bakery)
+    .exec(&conn)
+    .await
+    .expect("could not insert bakery");
 
-
-    // .save(&conn)
-    // .await
-    // .expect("error");
-    println!("!! create bakery: {:#?}", res);
-
-        let new_bakery: bakery::Model = Bakery::find_by_id(res.last_insert_id)
+    let new_bakery: bakery::Model = Bakery::find_by_id(res.last_insert_id)
         .one(&conn)
         .await
         .expect("could not find bakery")
         .unwrap();
 
-    // new_bakery.id = bakery.id.unwrap();
-println!("new_bakery: {:#?}", new_bakery);
-
-let result = Json(new_bakery);
-println!("@@ json result: {:#?}", result);
-
-    Ok(result)
+    Ok(Json(new_bakery))
 }
-
-
-    // let baker_bob = baker::ActiveModel {
-    //     name: Set("Baker Bob".to_owned()),
-    //     contact_details: Set(serde_json::json!(baker_bob_contact)),
-    //     bakery_id: Set(Some(bakery_insert_res.last_insert_id as i32)),
-    //     ..Default::default()
-    // };
-    // let res = Baker::insert(baker_bob)
-    //     .exec(db)
-    //     .await
-    //     .expect("could not insert baker");
-
-    // let baker: Option<baker::Model> = Baker::find_by_id(res.last_insert_id)
-    //     .one(db)
-    //     .await
-    //     .expect("could not find baker");
