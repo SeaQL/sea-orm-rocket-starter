@@ -8,7 +8,7 @@ use super::bakery;
 use crate::db::pool;
 
 pub fn routes() -> Vec<rocket::Route> {
-    routes![all, create, get, update]
+    routes![all, create, get, update, delete]
 }
 
 #[get("/")]
@@ -37,7 +37,6 @@ pub async fn get(
 
     Ok(Json(bakery))
 }
-
 
 #[post("/", data = "<input_data>")]
 async fn create(conn: Connection<pool::Db>, input_data: Json<super::bakery::InputData>) -> Result<Json<super::bakery::Model>, Status> {
@@ -69,6 +68,23 @@ async fn update(conn: Connection<pool::Db>, id: i32, input_data: Json<super::bak
     }.update(&conn).await;
 
     Ok(Json(fetch_bakery(conn, id).await))
+}
+
+#[delete("/<id>")]
+async fn delete(conn: Connection<pool::Db>, id: i32) -> Result<Json<super::bakery::Model>, Status> {
+
+    let bakery = Bakery::find_by_id(id)
+        .one(&conn)
+        .await
+        .unwrap()
+        .unwrap();
+
+    let bakeryActiveModel: bakery::ActiveModel = bakery.clone()
+        .into();
+
+    bakeryActiveModel.delete(&conn).await.unwrap();
+
+    Ok(Json(bakery))
 }
 
 async fn fetch_bakery(conn: Connection<pool::Db>, id: i32) -> super::bakery::Model {
