@@ -15,12 +15,15 @@ impl TestContext{
     /// The DB url is overridden by adding it to the env variables
     /// since the env variables override the values specified in the
     /// Rocket.toml file
-    pub async fn init() -> Self {
+    ///
+    /// `test_name` should be unique across the test suite
+    ///
+    pub async fn init(test_name: &str) -> Self {
         // TODO: get the base url from the existing url in the toml file
         // TODO: handle other DB types
         let base_url = "postgres://root:root@localhost".to_owned();
         let url = format!("{}/postgres", base_url);
-        let db_name = format!("rocket_starter_test_{}", Uuid::new_v4().to_simple() );
+        let db_name = format!("rocket_starter_test_{}", test_name );
         let db = sea_orm::Database::connect(&url).await.unwrap();
         let _drop_db_result = db
             .execute(sea_orm::Statement::from_string(

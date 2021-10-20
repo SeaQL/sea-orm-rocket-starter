@@ -30,24 +30,12 @@ pub async fn all(
 pub async fn get(
     connection: Connection<pool::Db>, id: i32
 ) -> Result<Json<Option<super::bakery::Model>>, Status> {
-println!("handler id: {:#?}", id);
-let v =         Bakery::find()
-            .all(&connection)
-            .await
-            .expect("could not retrieve bakeries")
-            .into_iter()
-            .collect::<Vec<_>>();
+    let bakery = Bakery::find_by_id(id)
+        .one(&connection)
+        .await
+        .unwrap();
 
-           println!("v: {:#?}", v);
-
-
-    let bakery =         Bakery::find_by_id(id)
-            .one(&connection)
-            .await
-            .unwrap();
-println!("handler bakery: {:#?}", bakery);
-
-    Ok(Json(bakery ))
+    Ok(Json(bakery))
 }
 
 
