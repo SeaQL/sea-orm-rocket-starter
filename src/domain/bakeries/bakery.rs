@@ -15,6 +15,13 @@ pub struct Model {
     pub profit_margin: f64,
 }
 
+#[derive(Clone, Debug, PartialEq, serde::Serialize, Deserialize)]
+pub struct InputData {
+    pub name: String,
+    pub profit_margin: f64,
+}
+
+
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(has_many = "baker::Entity")]
