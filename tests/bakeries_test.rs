@@ -3,7 +3,7 @@ use common::*;
 
 // use rocket::http::{ContentType, Status};
 use rocket::http::{ContentType, Status};
-use rocket::local::asynchronous::{Client, LocalResponse};
+use rocket::local::asynchronous::Client;
 
 use sea_orm_rocket_starter::domain::bakeries::*;
 
@@ -20,16 +20,19 @@ async fn all() {
 
     create_bakery(&test_context.client).await;
     create_bakery(&test_context.client).await;
-    let response = test_context.client
+    let response = test_context
+        .client
         .get("/bakeries")
         .header(ContentType::JSON)
-        .dispatch().await.into_json::<Vec<bakery::Model>>().await;
+        .dispatch()
+        .await
+        .into_json::<Vec<bakery::Model>>()
+        .await;
 
     let bakery_vec = response.expect("no bakeries returned!");
     assert_eq!(bakery_vec.len(), 2);
 
     TestContext::tear_down(&test_context).await;
-
 }
 
 async fn get() {
@@ -37,16 +40,14 @@ async fn get() {
 
     let r = create_bakery(&test_context.client).await;
 
-    let response = test_context.client
+    let response = test_context
+        .client
         .get(format!("/bakeries/{}", r.id))
         .header(ContentType::JSON)
         .dispatch()
         .await;
 
-    let r_bakery = response
-        .into_json::<bakery::Model>()
-        .await
-        .unwrap();
+    let r_bakery = response.into_json::<bakery::Model>().await.unwrap();
 
     assert_eq!(r_bakery.name, "Test Bakery");
 
@@ -58,22 +59,20 @@ async fn update() {
 
     let r = create_bakery(&test_context.client).await;
 
-    let response = test_context.client
+    let response = test_context
+        .client
         .put(format!("/bakeries/{}", r.id))
         .header(ContentType::JSON)
         .body(
             r##"{
             "name": "Updated Bakery",
             "profit_margin": 20.1
-        }"##
+        }"##,
         )
         .dispatch()
         .await;
 
-    let r_bakery = response
-        .into_json::<bakery::Model>()
-        .await
-        .unwrap();
+    let r_bakery = response.into_json::<bakery::Model>().await.unwrap();
 
     assert_eq!(r_bakery.name, "Updated Bakery");
     assert_eq!(r_bakery.profit_margin, 20.1);
@@ -86,24 +85,34 @@ async fn delete() {
 
     let r = create_bakery(&test_context.client).await;
 
-    let response = test_context.client
+    let response = test_context
+        .client
         .get("/bakeries")
         .header(ContentType::JSON)
-        .dispatch().await.into_json::<Vec<bakery::Model>>().await;
+        .dispatch()
+        .await
+        .into_json::<Vec<bakery::Model>>()
+        .await;
 
     let bakery_vec = response.expect("no bakeries returned!");
     assert_eq!(bakery_vec.len(), 1);
 
-    let response = test_context.client
+    let response = test_context
+        .client
         .delete(format!("/bakeries/{}", r.id))
         .header(ContentType::JSON)
-        .dispatch().await;
+        .dispatch()
+        .await;
 
     assert_eq!(response.status(), Status::Ok);
-    let response = test_context.client
+    let response = test_context
+        .client
         .get("/bakeries")
         .header(ContentType::JSON)
-        .dispatch().await.into_json::<Vec<bakery::Model>>().await;
+        .dispatch()
+        .await
+        .into_json::<Vec<bakery::Model>>()
+        .await;
 
     let bakery_vec = response.expect("no bakeries returned!");
     assert_eq!(bakery_vec.len(), 0);
@@ -119,9 +128,10 @@ async fn create_bakery(client: &Client) -> bakery::Model {
             r##"{
             "name": "Test Bakery",
             "profit_margin": 10.4
-        }"##
+        }"##,
         )
-        .dispatch().await;
+        .dispatch()
+        .await;
 
     assert_eq!(response.status(), Status::Ok);
     let r = response.into_json::<bakery::Model>().await.expect("bakery");

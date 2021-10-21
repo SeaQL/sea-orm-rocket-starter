@@ -1,6 +1,6 @@
+use crate::domain::orders;
+use rocket::serde::{Deserialize, Serialize};
 use sea_orm::entity::prelude::*;
-use rocket::serde::{Serialize, Deserialize};
-use crate::domain::orders as orders;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]

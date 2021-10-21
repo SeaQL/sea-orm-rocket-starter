@@ -1,9 +1,9 @@
+use crate::domain::bakeries::bakery;
+use crate::domain::bakers::baker;
+use crate::domain::cakes_bakers;
+use crate::domain::lineitems::lineitem;
+use rocket::serde::{Deserialize, Serialize};
 use sea_orm::entity::prelude::*;
-use rocket::serde::{Serialize, Deserialize};
-use crate::domain::bakeries::bakery as bakery;
-use crate::domain::bakers::baker as baker;
-use crate::domain::cakes_bakers as cakes_bakers;
-use crate::domain::lineitems::lineitem as lineitem;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]

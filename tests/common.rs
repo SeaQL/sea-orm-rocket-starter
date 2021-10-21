@@ -1,9 +1,9 @@
-use sea_orm_rocket_starter;
 use rocket::local::asynchronous::Client;
 use rocket_db_pools::rocket::figment::{
     providers::{Format, Toml},
     Figment,
 };
+use sea_orm_rocket_starter;
 
 use sea_orm::*;
 use std::env;
@@ -15,7 +15,7 @@ pub struct TestContext {
     pub client: Client,
 }
 
-impl TestContext{
+impl TestContext {
     /// Each integration test gets its own database
     /// The DB url is overridden by adding it to the env variables
     /// since the env variables override the values specified in the
@@ -29,11 +29,11 @@ impl TestContext{
             .extract_inner::<String>("default.databases.rocket_starter.url")
             .unwrap();
 
-        let url = Path::new( &full_url);
+        let url = Path::new(&full_url);
         let base_url = url.parent().unwrap().to_str().unwrap().to_owned();
 
         let url = format!("{}/postgres", base_url);
-        let db_name = format!("rocket_starter_test_{}", test_name );
+        let db_name = format!("rocket_starter_test_{}", test_name);
         let db = sea_orm::Database::connect(&url).await.unwrap();
         let _drop_db_result = db
             .execute(sea_orm::Statement::from_string(
@@ -55,9 +55,11 @@ impl TestContext{
         env::set_var("ROCKET_APP_DATABASES+ROCKET_STARTER+URL", url);
 
         let rocket = sea_orm_rocket_starter::rocket();
-        let client = Client::untracked(rocket).await.expect("valid rocket instance");
+        let client = Client::untracked(rocket)
+            .await
+            .expect("valid rocket instance");
 
-        Self{
+        Self {
             db_name: db_name,
             base_url: base_url,
             client: client,
@@ -68,10 +70,14 @@ impl TestContext{
         let url = format!("{}/postgres", test_context.base_url);
         let db = Database::connect(&url).await.unwrap();
 
-        let _r = db.execute(Statement::from_string(
-            DatabaseBackend::Postgres,
-            format!("DROP DATABASE IF EXISTS \"{}\" WITH (FORCE);", test_context.db_name)
-        ))
-        .await;
+        let _r = db
+            .execute(Statement::from_string(
+                DatabaseBackend::Postgres,
+                format!(
+                    "DROP DATABASE IF EXISTS \"{}\" WITH (FORCE);",
+                    test_context.db_name
+                ),
+            ))
+            .await;
     }
 }

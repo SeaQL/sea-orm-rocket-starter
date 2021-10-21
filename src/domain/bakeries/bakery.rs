@@ -1,8 +1,8 @@
+use crate::domain::bakers::baker;
+use crate::domain::cakes::cake;
+use crate::domain::orders::order;
+use rocket::serde::{Deserialize, Serialize};
 use sea_orm::entity::prelude::*;
-use rocket::serde::{Serialize, Deserialize};
-use crate::domain::cakes::cake as cake;
-use crate::domain::bakers::baker as baker;
-use crate::domain::orders::order as order;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
@@ -19,7 +19,6 @@ pub struct InputData {
     pub name: String,
     pub profit_margin: f64,
 }
-
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {

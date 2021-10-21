@@ -1,4 +1,5 @@
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
 
 use chrono::offset::Utc;
 use rocket::tokio::runtime;
@@ -13,19 +14,19 @@ use uuid::Uuid;
 
 #[path = "../domain/mod.rs"]
 mod domain;
-use domain::{*};
+use domain::*;
 
 #[path = "../db/mod.rs"]
 mod db;
-use db::{migrations};
+use db::migrations;
 
-use crate::domain::bakeries::bakery as bakery;
-use crate::domain::bakers::baker as baker;
-use crate::domain::cakes_bakers as cakes_bakers;
-use crate::domain::lineitems::lineitem as lineitem;
-use crate::domain::customers::customer as customer;
-use crate::domain::orders::order as order;
-use crate::domain::cakes::cake as cake;
+use crate::domain::bakeries::bakery;
+use crate::domain::bakers::baker;
+use crate::domain::cakes::cake;
+use crate::domain::cakes_bakers;
+use crate::domain::customers::customer;
+use crate::domain::lineitems::lineitem;
+use crate::domain::orders::order;
 
 fn main() {
     let url = Figment::from(Toml::file("Rocket.toml"))

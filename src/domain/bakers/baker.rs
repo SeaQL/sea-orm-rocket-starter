@@ -1,18 +1,24 @@
+use crate::domain::bakeries::bakery;
+use crate::domain::cakes::cake;
+use crate::domain::cakes_bakers;
+use crate::domain::customers::customer;
+use crate::domain::lineitems::lineitem;
+use crate::domain::orders::order;
+use rocket::serde::{Deserialize, Serialize};
 use sea_orm::entity::prelude::*;
-use rocket::serde::{Serialize, Deserialize};
-use crate::domain::cakes::cake as cake;
-use crate::domain::bakeries::bakery as bakery;
-use crate::domain::cakes_bakers as cakes_bakers;
-use crate::domain::lineitems::lineitem as lineitem;
-use crate::domain::customers::customer as customer;
-use crate::domain::orders::order as order;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
-#[serde(crate = "rocket::serde")]
 #[sea_orm(table_name = "baker")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
+    pub name: String,
+    pub contact_details: Json,
+    pub bakery_id: Option<i32>,
+}
+
+#[derive(Clone, Debug, PartialEq, serde::Serialize, Deserialize)]
+pub struct InputData {
     pub name: String,
     pub contact_details: Json,
     pub bakery_id: Option<i32>,

@@ -1,2 +1,2 @@
 pub mod baker;
-pub mod handler;
+pub mod handlers;
