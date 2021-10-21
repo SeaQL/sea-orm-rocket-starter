@@ -25,8 +25,12 @@ figment = "0.10.6"
 
 futures = { version = "^0.3" }
 futures-util = { version = "^0.3" }
-rocket = { path = "../Rocket/core/lib", features = ["json"] }
-rocket_db_pools = { path = "../Rocket/contrib/db_pools/lib" }
+
+rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "v0.5-rc", features = [
+  "json",
+] }
+rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "v0.5-rc" }
+
 rust_decimal = { version = "^1" }
 rust_decimal_macros = { version = "^1" }
 
