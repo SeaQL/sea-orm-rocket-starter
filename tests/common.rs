@@ -1,8 +1,13 @@
 use sea_orm_rocket_starter;
 use rocket::local::asynchronous::Client;
-use uuid::Uuid;
+use rocket_db_pools::rocket::figment::{
+    providers::{Format, Toml},
+    Figment,
+};
+
 use sea_orm::*;
 use std::env;
+use std::path::Path;
 
 pub struct TestContext {
     db_name: String,
@@ -19,9 +24,14 @@ impl TestContext{
     /// `test_name` should be unique across the test suite
     ///
     pub async fn init(test_name: &str) -> Self {
-        // TODO: get the base url from the existing url in the toml file
         // TODO: handle other DB types
-        let base_url = "postgres://root:root@localhost".to_owned();
+        let full_url = Figment::from(Toml::file("Rocket.toml"))
+            .extract_inner::<String>("default.databases.rocket_starter.url")
+            .unwrap();
+
+        let url = Path::new( &full_url);
+        let base_url = url.parent().unwrap().to_str().unwrap().to_owned();
+
         let url = format!("{}/postgres", base_url);
         let db_name = format!("rocket_starter_test_{}", test_name );
         let db = sea_orm::Database::connect(&url).await.unwrap();
