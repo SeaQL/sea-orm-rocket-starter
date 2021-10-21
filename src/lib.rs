@@ -25,7 +25,10 @@ fn not_found() -> Value {
 }
 
 pub fn rocket() -> Rocket<Build> {
-    use figment::{Figment, providers::{Format, Toml, Env}};
+    use figment::{
+        providers::{Env, Format, Toml},
+        Figment,
+    };
 
     let figment = Figment::new()
         .merge(rocket::Config::default())
@@ -37,7 +40,7 @@ pub fn rocket() -> Rocket<Build> {
         .attach(AdHoc::try_on_ignite("Migrations", run_migrations))
         .mount("/cakes", domain::cakes::handler::routes())
         .mount("/bakeries", domain::bakeries::handlers::routes())
-        .mount("/bakers", domain::bakers::handler::routes())
+        .mount("/bakers", domain::bakers::handlers::routes())
         .mount("/customers", domain::customers::handler::routes())
         .mount("/lineitems", domain::lineitems::handler::routes())
         .mount("/orders", domain::orders::handler::routes())

@@ -1,5 +1,5 @@
-use sea_orm_rocket_starter;
 use rocket::tokio::runtime;
+use sea_orm_rocket_starter;
 
 fn main() {
     runtime::Builder::new_multi_thread()

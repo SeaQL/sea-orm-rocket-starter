@@ -1,7 +1,6 @@
+use crate::domain::bakers;
+use crate::domain::cakes;
 use sea_orm::entity::prelude::*;
-use crate::domain::cakes as cakes;
-use crate::domain::bakers as bakers;
-
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = "cakes_bakers")]

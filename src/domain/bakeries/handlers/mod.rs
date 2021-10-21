@@ -1,10 +1,10 @@
 use rocket::http::Status;
-use rocket::serde::json::{json, Json, Value};
+use rocket::serde::json::Json;
 use rocket_db_pools::Connection;
-use sea_orm::{entity::*, query::*};
+use sea_orm::entity::*;
 
-use super::bakery::Entity as Bakery;
 use super::bakery;
+use super::bakery::Entity as Bakery;
 use crate::db::pool;
 
 pub fn routes() -> Vec<rocket::Route> {
@@ -12,34 +12,32 @@ pub fn routes() -> Vec<rocket::Route> {
 }
 
 #[get("/")]
-pub async fn all(
-    connection: Connection<pool::Db>,
-) -> Result<Json<Vec<super::bakery::Model>>, Status> {
+pub async fn all(conn: Connection<pool::Db>) -> Result<Json<Vec<super::bakery::Model>>, Status> {
     Ok(Json(
         Bakery::find()
-            .all(&connection)
+            .all(&conn)
             .await
             .expect("could not retrieve bakeries")
             .into_iter()
             .collect::<Vec<_>>(),
     ))
-    // .map_err(|error| error_status(error))
 }
 
 #[get("/<id>")]
 pub async fn get(
-    connection: Connection<pool::Db>, id: i32
+    conn: Connection<pool::Db>,
+    id: i32,
 ) -> Result<Json<Option<super::bakery::Model>>, Status> {
-    let bakery = Bakery::find_by_id(id)
-        .one(&connection)
-        .await
-        .unwrap();
+    let bakery = Bakery::find_by_id(id).one(&conn).await.unwrap();
 
     Ok(Json(bakery))
 }
 
 #[post("/", data = "<input_data>")]
-async fn create(conn: Connection<pool::Db>, input_data: Json<super::bakery::InputData>) -> Result<Json<super::bakery::Model>, Status> {
+async fn create(
+    conn: Connection<pool::Db>,
+    input_data: Json<super::bakery::InputData>,
+) -> Result<Json<super::bakery::Model>, Status> {
     let new_bakery = input_data.clone().into_inner();
 
     let bakery = bakery::ActiveModel {
@@ -49,15 +47,19 @@ async fn create(conn: Connection<pool::Db>, input_data: Json<super::bakery::Inpu
     };
 
     let res = Bakery::insert(bakery)
-    .exec(&conn)
-    .await
-    .expect("could not insert bakery");
+        .exec(&conn)
+        .await
+        .expect("could not insert bakery");
 
     Ok(Json(fetch_bakery(conn, res.last_insert_id).await))
 }
 
 #[put("/<id>", data = "<input_data>")]
-async fn update(conn: Connection<pool::Db>, id: i32, input_data: Json<super::bakery::InputData>) -> Result<Json<super::bakery::Model>, Status> {
+async fn update(
+    conn: Connection<pool::Db>,
+    id: i32,
+    input_data: Json<super::bakery::InputData>,
+) -> Result<Json<super::bakery::Model>, Status> {
     let input_data = input_data.clone().into_inner();
 
     let r = bakery::ActiveModel {
@@ -65,24 +67,20 @@ async fn update(conn: Connection<pool::Db>, id: i32, input_data: Json<super::bak
         name: Set(input_data.name.to_owned()),
         profit_margin: Set(input_data.profit_margin),
         ..Default::default()
-    }.update(&conn).await;
+    }
+    .update(&conn)
+    .await;
 
     Ok(Json(fetch_bakery(conn, id).await))
 }
 
 #[delete("/<id>")]
 async fn delete(conn: Connection<pool::Db>, id: i32) -> Result<Json<super::bakery::Model>, Status> {
+    let bakery = Bakery::find_by_id(id).one(&conn).await.unwrap().unwrap();
 
-    let bakery = Bakery::find_by_id(id)
-        .one(&conn)
-        .await
-        .unwrap()
-        .unwrap();
+    let bakery_active_model: bakery::ActiveModel = bakery.clone().into();
 
-    let bakeryActiveModel: bakery::ActiveModel = bakery.clone()
-        .into();
-
-    bakeryActiveModel.delete(&conn).await.unwrap();
+    bakery_active_model.delete(&conn).await.unwrap();
 
     Ok(Json(bakery))
 }
