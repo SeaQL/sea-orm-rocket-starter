@@ -33,7 +33,7 @@ pub fn rocket() -> Rocket<Build> {
     let figment = Figment::new()
         .merge(rocket::Config::default())
         .merge(Toml::file("Rocket.toml").nested())
-        .merge(Env::prefixed("ROCKET_APP_").split("+"));
+        .merge(Env::prefixed("ROCKET_APP_").split("_"));
 
     rocket::custom(figment)
         .attach(pool::Db::init())

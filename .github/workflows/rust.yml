@@ -1,0 +1,85 @@
+name: tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - ss/clean-up
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  compile-postgres:
+    name: Compile PostgreSQL
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        runtime: [tokio]
+        tls: [native-tls]
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            Cargo.lock
+            target
+          key: ${{ github.sha }}-${{ github.run_id }}-${{ runner.os }}-postgres-${{ matrix.runtime }}-${{ matrix.tls }}
+
+  postgres:
+    name: Postgres
+    runs-on: ubuntu-20.04
+    needs: compile-postgres
+    env:
+      ROCKET_APP_DEFAULT_DATABASES_ROCKETSTARTER_URL: "postgres://root:root@localhost/rocket_starter/"
+    strategy:
+      matrix:
+        version: [13.3]
+        runtime: [tokio]
+        tls: [native-tls]
+    services:
+      postgres:
+        image: postgres:${{ matrix.version }}
+        env:
+          POSTGRES_HOST: 127.0.0.1
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: root
+        ports:
+          - "5432:5432"
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            Cargo.lock
+            target
+          key: ${{ github.sha }}-${{ github.run_id }}-${{ runner.os }}-postgres-${{ matrix.runtime }}-${{ matrix.tls }}
+
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: >
+            --test '*'

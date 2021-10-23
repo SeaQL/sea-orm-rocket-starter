@@ -1,14 +1,11 @@
-mod common;
-use common::*;
+use super::common::*;
 
-// use rocket::http::{ContentType, Status};
 use rocket::http::{ContentType, Status};
 use rocket::local::asynchronous::Client;
 
 use sea_orm_rocket_starter::domain::bakeries::*;
 
-#[rocket::async_test]
-async fn main() {
+pub async fn main() {
     all().await;
     get().await;
     update().await;
