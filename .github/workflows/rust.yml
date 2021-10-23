@@ -82,4 +82,4 @@ jobs:
         with:
           command: test
           args: >
-            --test '*'
+            -- --nocapture
