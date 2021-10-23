@@ -12,8 +12,12 @@ Probably, some day, we will name this project template "Rust on Rocket" 🚀!
 ## Requirements
 Postgres >= 13
 
+## To seed the DB initially:
+cargo  run --bin seed
+
 ## To run the app:
 `cargo run`
 Use your API client to access the resources: `http://127.0.0.1:8000/[resource_name]/[id]`
+
 ## To run the test:
 `cargo test`

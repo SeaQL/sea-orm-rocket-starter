@@ -1,2 +1,2 @@
-[default.databases.rocket_starter]
+[default.databases.rocketstarter]
 url = "postgres://root:root@localhost/rocket_starter"

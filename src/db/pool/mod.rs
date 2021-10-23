@@ -25,5 +25,5 @@ impl rocket_db_pools::Pool for RocketDbPool {
 }
 
 #[derive(Database, Debug)]
-#[database("rocket_starter")]
+#[database("rocketstarter")]
 pub struct Db(RocketDbPool);

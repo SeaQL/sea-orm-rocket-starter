@@ -30,7 +30,7 @@ use crate::domain::orders::order;
 
 fn main() {
     let url = Figment::from(Toml::file("Rocket.toml"))
-        .extract_inner::<String>("default.databases.rocket_starter.url")
+        .extract_inner::<String>("default.databases.rocketstarter.url")
         .unwrap();
 
     runtime::Builder::new_multi_thread()

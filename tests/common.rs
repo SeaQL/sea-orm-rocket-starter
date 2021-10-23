@@ -1,6 +1,6 @@
 use rocket::local::asynchronous::Client;
 use rocket_db_pools::rocket::figment::{
-    providers::{Format, Toml},
+    providers::{Env, Format, Toml},
     Figment,
 };
 use sea_orm_rocket_starter;
@@ -25,8 +25,11 @@ impl TestContext {
     ///
     pub async fn init(test_name: &str) -> Self {
         // TODO: handle other DB types
-        let full_url = Figment::from(Toml::file("Rocket.toml"))
-            .extract_inner::<String>("default.databases.rocket_starter.url")
+
+        let full_url = Figment::new()
+            .merge(Toml::file("Rocket.toml"))
+            .merge(Env::prefixed("ROCKET_APP_").split("_"))
+            .extract_inner::<String>("default.databases.rocketstarter.url")
             .unwrap();
 
         let url = Path::new(&full_url);
@@ -50,9 +53,10 @@ impl TestContext {
             .await;
 
         let url = format!("{}/{}", base_url, db_name);
+println!("url: {:#?}", url);
 
         // Override the DB url by adding an env var
-        env::set_var("ROCKET_APP_DATABASES+ROCKET_STARTER+URL", url);
+        env::set_var("ROCKET_APP_DATABASES_ROCKETSTARTER_URL", url);
 
         let rocket = sea_orm_rocket_starter::rocket();
         let client = Client::untracked(rocket)
