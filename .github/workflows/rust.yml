@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - ss/clean-up
+      - master
 
 env:
   CARGO_TERM_COLOR: always
@@ -35,7 +35,7 @@ jobs:
             target
           key: ${{ github.sha }}-${{ github.run_id }}-${{ runner.os }}-postgres-${{ matrix.runtime }}-${{ matrix.tls }}
 
-  postgres:
+  integration_tests:
     name: Postgres
     runs-on: ubuntu-20.04
     needs: compile-postgres

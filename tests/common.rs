@@ -53,7 +53,6 @@ impl TestContext {
             .await;
 
         let url = format!("{}/{}", base_url, db_name);
-println!("url: {:#?}", url);
 
         // Override the DB url by adding an env var
         env::set_var("ROCKET_APP_DATABASES_ROCKETSTARTER_URL", url);
