@@ -3,13 +3,13 @@ extern crate rocket;
 
 use chrono::offset::Utc;
 use rocket::tokio::runtime;
-use rocket_db_pools::rocket::figment::{
-    providers::{Format, Toml},
-    Figment,
-};
 use rust_decimal_macros::dec;
 use sea_orm::entity::prelude::*;
 use sea_orm::entity::*;
+use sea_orm_rocket::rocket::figment::{
+    providers::{Format, Toml},
+    Figment,
+};
 use uuid::Uuid;
 
 #[path = "../domain/mod.rs"]

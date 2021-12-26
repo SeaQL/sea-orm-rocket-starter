@@ -1,12 +1,13 @@
 use crate::domain::*;
-use sea_orm::{DbConn, EntityTrait, Schema};
+use sea_orm::{ConnectionTrait, DbConn, EntityTrait, Schema};
 
 async fn create_table<E>(db: &DbConn, entity: E)
 where
     E: EntityTrait,
 {
     let builder = db.get_database_backend();
-    let stmt = builder.build(Schema::create_table_from_entity(entity).if_not_exists());
+    let schema = Schema::new(builder);
+    let stmt = builder.build(schema.create_table_from_entity(entity).if_not_exists());
 
     match db.execute(stmt).await {
         Ok(_) => println!("Migrated {}", entity.table_name()),

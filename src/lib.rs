@@ -4,7 +4,7 @@ extern crate rocket;
 use rocket::fairing::{self, AdHoc};
 use rocket::serde::json::{json, Value};
 use rocket::{Build, Rocket};
-use rocket_db_pools::Database;
+use sea_orm_rocket::Database;
 
 mod db;
 pub mod domain;
