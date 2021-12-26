@@ -26,16 +26,17 @@ figment = "0.10.6"
 futures = { version = "^0.3" }
 futures-util = { version = "^0.3" }
 
-rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "v0.5-rc", features = [
+rocket = { version = "0.5.0-rc.1", features = [
   "json",
 ] }
-rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "v0.5-rc" }
 
 rust_decimal = { version = "^1" }
 rust_decimal_macros = { version = "^1" }
 
-sea-orm = { version = "^0.2.4", features = [
+sea-orm-rocket = { version = "0.1.0-rc.1", git = "https://github.com/SeaQL/sea-orm.git" }
+sea-orm = { version = "^0.5.0-rc.1", features = [
   "macros",
+  "runtime-tokio-native-tls",
 ], default-features = false }
 serde_json = { version = "^1" }
 uuid = { version = "0.8", features = ["serde", "v4"] }
@@ -43,6 +44,6 @@ serde = "*"
 
 [features]
 default = ["sqlx-postgres", "sqlx-sqlite"]
-sqlx-mysql = ["sea-orm/sqlx-mysql", "rocket_db_pools/sqlx_mysql"]
-sqlx-postgres = ["sea-orm/sqlx-postgres", "rocket_db_pools/sqlx_postgres"]
-sqlx-sqlite = ["sea-orm/sqlx-sqlite", "rocket_db_pools/sqlx_sqlite"]
+sqlx-mysql = ["sea-orm/sqlx-mysql"]
+sqlx-postgres = ["sea-orm/sqlx-postgres"]
+sqlx-sqlite = ["sea-orm/sqlx-sqlite"]

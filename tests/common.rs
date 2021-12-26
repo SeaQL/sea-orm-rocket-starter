@@ -1,5 +1,5 @@
 use rocket::local::asynchronous::Client;
-use rocket_db_pools::rocket::figment::{
+use sea_orm_rocket::rocket::figment::{
     providers::{Env, Format, Toml},
     Figment,
 };
